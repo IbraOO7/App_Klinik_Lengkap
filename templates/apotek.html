@@ -1,0 +1,231 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:8rem; height: 8rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Daftar Obat</h1>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">+ Obat</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Obat Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="{{url_for('tambahobat')}}" id="tambahObat" method="POST">
+                <div class="mb-3">
+                  <label for="validationCustom01" class="form-label">Nama Obat</label>
+                  <input type="text" class="form-control" name="namaobat" id="validationCustom01" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="validationCustom04" class="form-label">Jenis Obat</label>
+                  <select class="form-select" name="jenisobat" id="validationCustom04" required>
+                    <option selected disabled>Pilih...</option>
+                    <option value="Psikotopika">Psikotropika</option>
+                    <option value="Herbal">Herbal</option>
+                    <option value="Paten">Paten</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid state.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="validationCustom02" class="form-label">Harga Beli</label>
+                  <input type="number" class="form-control" name="harga_beli" id="validationCustom02" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="validationCustomUsername" class="form-label">Harga Jual</label>
+                  <div class="input-group has-validation">
+                    <input type="number" class="form-control" name="harga_jual" id="validationCustomUsername" required>
+                    <div class="invalid-feedback">
+                      Please choose a username.
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="validationCustom04" class="form-label">Suplier</label>
+                  <select class="form-select" name="suplier_id" id="validationCustom04" required>
+                    <option selected disabled>Pilih...</option>
+                    {% for sup in suplier %}
+                    <option value="{{sup.id}}">{{sup.perusahaan}}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid state.
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+            </form>
+            </div>
+        </div>
+        </div>
+        <br /><br />
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Nama Obat</th>
+                            <th scope="col">Jenis Obat</th>
+                            <th scope="col">Harga Beli</th>
+                            <th scope="col">Harga Jual</th>
+                            <th scope="col">Suplier</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for dt in data %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.namaobat}}</td>
+                            <td>{{dt.jenisobat}}</td>
+                            <td>{{dt.harga_beli}}</td>
+                            <td>{{dt.harga_jual}}</td>
+                            <td>{{dt.suplier.perusahaan}}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@getbootstrap">+</button>
+                              <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-md">
+                                  <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Obat Baru</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form action="/editobat/{{dt.id}}" id="editObat" method="POST">
+                                      <div class="mb-3">
+                                        <label for="validationCustom01" class="form-label">Nama Obat</label>
+                                        <input type="text" class="form-control" name="namaobat" value="{{dt.namaobat}}" id="validationCustom01" required>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="validationCustom04" class="form-label">Jenis Obat</label>
+                                        <select class="form-select" name="jenisobat" value="{{dt.jenisobat}}" id="validationCustom04" required>
+                                          <option value="{{dt.jenisobat}}">{{dt.jenisobat}}</option>
+                                          <option value="Psikotopika">Psikotropika</option>
+                                          <option value="Herbal">Herbal</option>
+                                          <option value="Paten">Paten</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                          Please select a valid state.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="validationCustom02" class="form-label">Harga Beli</label>
+                                        <input type="number" class="form-control" name="harga_beli" value="{{dt.harga_beli}}" id="validationCustom02" required>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="validationCustomUsername" class="form-label">Harga Jual</label>
+                                        <div class="input-group has-validation">
+                                          <input type="number" class="form-control" name="harga_jual" value="{{dt.harga_jual}}" id="validationCustomUsername" required>
+                                          <div class="invalid-feedback">
+                                            Please choose a username.
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="validationCustom04" class="form-label">Suplier</label>
+                                        <select class="form-select" name="suplier_id" id="validationCustom04" required>
+                                          <option value="{{dt.suplier.id}}">{{dt.suplier.perusahaan}}</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                          Please select a valid state.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="validationCustom04" class="form-label">Kondisi</label>
+                                        <select class="form-select" name="kondisi" id="validationCustom04" required>
+                                          <option disable value="{{dt.kondisi}}">{{dt.kondisi}}</option>
+                                          <option value="Baik">Baik</option>
+                                          <option value="Rusak">Rusak</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                          Please select a valid state.
+                                        </div>
+                                      </div>
+                                      <input type="hidden" name="idnya" value="{{dt.id}}" id="editId">
+                                      <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </form>
+                                  </div>
+                                  </div>
+                              </div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{dt.id}}">
+                                X
+                              </button>
+                              <div class="modal fade" id="staticBackdrop{{dt.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="staticBackdropLabel">Konfirmasi</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <h5 class="text-center">Apakah anda yakin ingin menghapus data ini?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <a href="/hapusobat/{{dt.id}}" class="btn btn-danger">Ya, Hapus</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+{% block tail %}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          document.querySelector('#tambahObat').onsubmit = async (e) => {
+            e.preventDefault();
+            const request = new XMLHttpRequest();
+            request.onload = () => {
+                const data = JSON.parse(request.responseText);
+                if(data.success) {
+                  alert('Data berhasil di input');
+                } else {
+                  alert('Ada trouble');
+                }
+            }
+            const form = document.querySelector('#tambahObat')
+            const data = new FormData(form);
+            await request.open('POST', '/tambahobat', true);
+            request.send(data);
+            location.reload();
+          }
+      })
+    </script>
+{% endblock %}
+{% endblock %}

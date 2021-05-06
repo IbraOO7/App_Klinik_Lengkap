@@ -1,0 +1,128 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:10rem; height: 10rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Daftar Pasien</h1>
+    </div>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Tempat Lahir</th>
+                            <th scope="col">Tanggal Lahir</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for dt in data %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.nama}}</td>
+                            <td>{{dt.tl}}</td>
+                            <td>{{dt.tg_lahir}}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@getbootstrap">+</button>
+                              <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Pasien Baru</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form class="row g-3" action="/tambahpasien/{{dt.id}}" id="tambahPasien" method="POST">
+                                      <div class="col-md-4">
+                                        <label for="validationCustom01" class="form-label">Nama</label>
+                                        <input type="text" class="form-control" name="nama" value="{{dt.nama}}" required readonly>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                        <label for="validationCustom02" class="form-label">Tempat</label>
+                                        <input type="text" class="form-control" value="{{dt.tl}}" required readonly>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                        <label for="validationCustomUsername" class="form-label">Tanggal Lahir</label>
+                                        <div class="input-group has-validation">
+                                          <input type="date" class="form-control" value="{{dt.tg_lahir}}" required readonly>
+                                          <div class="invalid-feedback">
+                                            Please choose a username.
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">Keluhan:</label>
+                                        <textarea class="form-control" name="keluhan" style="height:150px;" required ></textarea>
+                                      </div>
+									  <div class="mb-3">
+                                        <label for="validationCustom05" class="form-label">Keterangan</label>
+                                        <input type="text" class="form-control" name="keterangan" required>
+                                        <div class="invalid-feedback">
+                                          Please provide a valid zip.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">Resep:</label>
+                                        <textarea class="form-control" name="resep"  style="height:150px;" required ></textarea>
+                                      </div>
+                                      <input type="hidden" name="daftar_id" value="{{dt.id}}" id="pId">
+                                      <input type="hidden" name="user_id" value="{{session.id}}">
+                                      <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </form>
+                                  </div>
+                                  </div>
+                              </div>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+
+{% block tail %}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#tambahPasien').onsubmit = async (e) => {
+        e.preventDefault();
+        const request = new XMLHttpRequest();
+        request.onload = () => {
+            const data = JSON.parse(request.responseText);
+            if(data.success) {
+                alert('Data berhasil di input');
+            } else {
+                alert('Ada trouble');
+            }
+        }
+        const form = document.querySelector('#tambahPasien');
+        const id = document.querySelector('#pId').value;
+        const data = new FormData(form);
+        await request.open('POST', `/tambahpasien/${id}`, true);
+        request.send(data);
+        location.reload();
+      }
+    })
+  </script>
+{% endblock %}
+
+{% endblock %}

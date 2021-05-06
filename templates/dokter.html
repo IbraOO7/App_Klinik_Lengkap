@@ -1,0 +1,140 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:8rem; height: 8rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Daftar Dokter</h1>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">+ Dokter</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Input Dokter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('tambahdokter')}}" id="tambahDokter" method="POST">
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Nama:</label>
+                    <input type="text" class="form-control" name="nama" id="recipient-name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Jadwal:</label>
+                    <textarea class="form-control" name="jadwal" id="message-text" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Input</button>
+            </div>
+              </form>
+            </div>
+        </div>
+        </div>
+        <br /><br />
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Jadwal</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for dk in data %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dk.nama}}</td>
+                            <td>{{dk.jadwal}}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dk.id}}" data-bs-whatever="@getbootstrap">+</button>
+
+                              <div class="modal fade" id="exampleModal1{{dk.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Edit Dokter</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form action="/editdokter/{{dk.id}}" id="editDokter" method="POST">
+                                      <div class="mb-3">
+                                          <label for="recipient-name" class="col-form-label">Nama:</label>
+                                          <input type="text" class="form-control" name="nama" value="{{dk.nama}}" id="recipient-name" required>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="message-text" class="col-form-label">Jadwal:</label>
+                                          <textarea class="form-control" name="jadwal" value="{{dk.jadwal}}" id="message-text" required>{{dk.jadwal}}</textarea>
+                                      </div>
+                                      <button type="submit" class="btn btn-primary">Input</button>
+                                    </form>
+                                  </div>                                  
+                                  </div>
+                              </div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{dk.id}}">
+                                X
+                              </button>
+                              <div class="modal fade" id="staticBackdrop{{dk.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="staticBackdropLabel">Konfirmasi</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <h5 class="text-center">Apakah anda yakin ingin menghapus data ini?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <a href="/hapusdokter/{{dk.id}}" class="btn btn-danger">Ya, Hapus</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+{% block tail %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#tambahDokter').onsubmit = async (e) => {
+                e.preventDefault();
+                const request = new XMLHttpRequest();
+                request.onload = () => {
+                    const data = JSON.parse(request.responseText);
+                    if(data.success) {
+                        alert('Data berhasil di tambahkan');
+                    } 
+                }
+				request.onerror = () => {
+					alert('Ada trouble');
+				}
+                const form = document.querySelector('#tambahDokter');
+                const datanya = new FormData(form);
+                await request.open('POST', '/tambahdokter', true);
+                request.send(datanya);
+                location.reload();
+            }
+        })
+    </script>
+{% endblock %}
+{% endblock %}

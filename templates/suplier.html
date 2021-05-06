@@ -1,0 +1,152 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:8rem; height: 8rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Daftar Suplier</h1>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">+ Suplier</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Suplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('tambahsuplier')}}" method="POST" id="tambahSuplier">
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Perusahaan:</label>
+                    <input type="text" class="form-control" name="perusahaan" id="recipient-name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Kontak:</label>
+                  <input type="text" class="form-control" name="kontak" id="recipient-name" required>
+              </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Alamat:</label>
+                    <textarea class="form-control" name="alamat" id="message-text" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Input</button>
+            </div>
+            </form>
+            </div>
+        </div>
+        </div>
+        <br /><br />
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Nama Perusahaan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Alamat</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                        </thead>
+                        {% for dt in data %}
+                        <tbody>
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.perusahaan}}</td>
+                            <td>{{dt.kontak}}</td>
+                            <td>{{dt.alamat}}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@getbootstrap">+</button>
+                              <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Tambah Suplier</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form action="/editsuplier/{{dt.id}}" method="POST" id="editSuplier">
+                                      <div class="mb-3">
+                                          <label for="recipient-name" class="col-form-label">Perusahaan:</label>
+                                          <input type="text" class="form-control" name="perusahaan" value="{{dt.perusahaan}}" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">Kontak:</label>
+                                        <input type="text" class="form-control" name="kontak" value="{{dt.kontak}}" required>
+                                    </div>
+                                      <div class="mb-3">
+                                          <label for="message-text" class="col-form-label">Alamat:</label>
+                                          <textarea class="form-control" name="alamat" value="{{dt.alamat}}" required>{{dt.alamat}}</textarea>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="submit" class="btn btn-primary">Input</button>
+                                  </div>
+                                  </form>
+                                  </div>
+                              </div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{dt.id}}">
+                                X
+                              </button>
+                              <div class="modal fade" id="staticBackdrop{{dt.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="staticBackdropLabel">Konfirmasi</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <h5 class="text-center">Apakah anda yakin ingin menghapus data ini?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <a href="/hapus_suplier/{{dt.id}}" class="btn btn-danger">Ya, Hapus</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        {% endfor %}
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+
+{% block tail %}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#tambahSuplier').onsubmit = async (e) => {
+          e.preventDefault();
+          const request = new XMLHttpRequest();
+          request.onload = () => {
+              const data = JSON.parse(request.responseText);
+              if(data.success) {
+                alert('Data berhasil di input');
+              } else {
+                alert('Ada trouble');
+              }
+          }
+          const form = document.querySelector('#tambahSuplier')
+          const data = new FormData(form);
+          await request.open('POST', '/tambahsuplier', true);
+          request.send(data);
+          location.reload();
+        }
+      })
+    </script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:10rem; height: 10rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <br />
+        <form class="form-inline" action="{{url_for('backup')}}" method="POST">
+            <div class="col-md-2">
+                <select class="form-select" name="q" id="validationCustom04" required>
+                    <option selected></option>
+                    <option value="January">Januari</option>
+                    <option value="February">Februari</option>
+                    <option value="March">Maret</option>
+                    <option value="April">April</option>
+                    <option value="May">Mei</option>
+                    <option value="Juny">Juni</option>
+                    <option value="July">Juli</option>
+                    <option value="August">Agustus</option>
+                    <option value="September">September</option>
+                    <option value="October">Oktober</option>
+                    <option value="November">November</option>
+                    <option value="December">Desember</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid state.
+                </div>
+              </div>
+              <br />
+              <div class="col-md-2">
+                <select class="form-select" name="q" id="validationCustom04" required>
+                  <option selected></option>
+                  <option value="2021">2021</option>
+                </select>
+              </div>
+            <br />
+            <button type="submit" class="btn btn-primary mb-2">Cari</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for mess in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <p>{{mess}}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <p></p>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Tanggal Periksa</th>
+							<th scope="col">Penyakit</th>
+                            <th scope="col">Dokter</th>
+                          </tr>
+                        </thead>
+                        {% if caridata %}
+                        {% for dt in caridata %}
+                        <tbody>
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.nama}}</td>
+                            <td>{{dt.tanggal}}</td>
+							<td>{{dt.keterangan}}</td>
+                            <td>{{dt.user.username}}</td>
+                          </tr>
+                        </tbody>
+                        {% endfor %}
+                       {% endif %}
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:10rem; height: 10rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Dashboard</h1>
+    </div>
+    {% if session.level == "Admin" %}
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="card text-white bg-primary" style="max-width: 18rem;">
+          <div class="card-body">
+            <i class ="feather-24" data-feather="users"></i>
+            <h5 class="card-title">Total Kunjungan</h5>
+            <p class="card-text" style="font-size: 25px;"><b>{{row}}</b></p>
+          </div>
+          <br />
+          <div class="card-footer">
+            <small class="text-white"></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="card text-white bg-success" style="max-width: 18rem;">
+          <div class="card-body">
+            <i class ="feather-24" data-feather="user-plus"></i>
+            <h5 class="card-title">Jumlah Dokter</h5>
+            <p class="card-text" style="font-size: 25px;"><b>{{row1}}</b></p>
+          </div>
+          <br />
+          <div class="card-footer">
+            <small class="text-white"></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="card text-white bg-danger" style="max-width: 18rem;">
+          <div class="card-body">
+              <i class ="feather-24" data-feather="thumbs-down"></i>
+            <h5 class="card-title">Kerugian</h5>
+            <p class="card-text" style="font-size: 25px;"><b>{{"Rp.{:,}".format(row2)}}</b></p>
+          </div>
+          <br />
+          <div class="card-footer">
+            <small class="text-white"></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="card text-white bg-warning" style="max-width: 18rem;">
+          <div class="card-body">
+            <i class ="feather-24" data-feather="smile"></i>
+            <h5 class="card-title">Jumlah User</h5>
+            <p class="card-text" style="font-size: 25px;"><b>{{row3}}</b></p>
+          </div>
+          <br />
+          <div class="card-footer">
+            <small class="text-white"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <figure class="highcharts-figure">
+      <div id="container"></div>
+    </figure>
+    {% elif session.level == "Dokter" %}
+    <main class="container">
+      <div class="bg-light p-5 rounded">
+        <h1>Welcome, Dokter</h1>
+        <p class="lead">Menu Pantau yang simple tapi powerfull.</p>
+        <a class="btn btn-lg btn-primary" href="/laporan" role="button">Lihat pasien yang telah ditangani &raquo;</a>
+      </div>
+    </main>
+    {% elif session.level == "Administrasi" %}
+        <br />
+        <canvas class="my-4 w-100" id="myChart" width="700" height="280"></canvas>
+    {% endif %}
+  </main>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+    Highcharts.chart('container', {
+      chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+      },
+      title: {
+          text: 'Grafik Kondisi'
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+          }
+      },
+      series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          data: [{
+              name: 'Total Aset',
+              y: {{row4}},
+              sliced: true,
+              selected: true
+          }, {
+              name: 'Kerugian',
+              y: {{row2}}
+          }]
+      }]
+  });
+</script>
+{% endblock %}

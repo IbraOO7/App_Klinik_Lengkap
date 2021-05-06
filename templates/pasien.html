@@ -1,0 +1,220 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div id="Loader">
+    <div class="spinner-border text-success none" style="width:8rem; height: 8rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Daftar Pasien</h1>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">+ Daftar Pasien</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pasien Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3" action="{{url_for('tambah_daftar')}}" method="POST" id="tambahDaftar">
+                <div class="col-md-4">
+                  <label for="validationCustom01" class="form-label">Nama</label>
+                  <input type="text" class="form-control" name="nama" id="nama" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="validationCustom02" class="form-label">Tempat</label>
+                  <input type="text" class="form-control" name="tempat" id="tempat" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="validationCustomUsername" class="form-label">Tanggal Lahir</label>
+                  <div class="input-group has-validation">
+                    <input type="date" class="form-control" name="tg_lahir" id="tg_lahir" required>
+                    <div class="invalid-feedback">
+                      Please choose a username.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label for="validationCustom04" class="form-label">Jenis Kelamin</label>
+                  <select class="form-select" id="jk" name="jk" required>
+                    <option selected disabled>Choose...</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid state.
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label for="validationCustom04" class="form-label">Status Pernikahan</label>
+                  <select class="form-select" name="status" id="status" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option value="Belum Menikah">Belum Menikah</option>
+                    <option value="Sudah Menikah">Menikah</option>
+                    <option value="Cerai">Cerai</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid state.
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="validationCustom05" class="form-label">Profesi</label>
+                  <input type="text" class="form-control" name="profesi" id="profesi" required>
+                  <div class="invalid-feedback">
+                    Please provide a valid zip.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Alamat:</label>
+                  <textarea class="form-control" name="alamat" id="alamat" style="height:220px;" required ></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+            </form>
+            </div>
+        </div>
+        </div>
+        <br /><br />
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm" id="myTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Tempat Lahir</th>
+                            <th scope="col">Tanggal Lahir</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for dt in data %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.nama}}</td>
+                            <td>{{dt.tl}}</td>
+                            <td>{{dt.tg_lahir}}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@getbootstrap">+</button>
+                              <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Pasien Baru</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form class="row g-3" action="/edit_daftar/{{dt.id}}" method="POST">
+                                      <div class="col-md-4">
+                                        <label for="validationCustom01" class="form-label">Nama</label>
+                                        <input type="text" class="form-control" name="nama" value="{{dt.nama}}" required>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                        <label for="validationCustom02" class="form-label">Tempat</label>
+                                        <input type="text" class="form-control" name="tl" value="{{dt.tl}}" required>
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                        <label for="validationCustomUsername" class="form-label">Tanggal Lahir</label>
+                                        <div class="input-group has-validation">
+                                          <input type="date" class="form-control" name="tg_lahir" value="{{dt.tg_lahir}}" required>
+                                          <div class="invalid-feedback">
+                                            Please choose a username.
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label">Jenis Kelamin</label>
+                                        <select class="form-select" value="{{dt.jk}}" name="jk" required>
+                                          <option selected disabled>Choose...</option>
+                                          <option value="Laki-laki">Laki-laki</option>
+                                          <option value="Perempuan">Perempuan</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                          Please select a valid state.
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label">Status Pernikahan</label>
+                                        <select class="form-select" name="status" value="{{dt.status}}" required>
+                                          <option selected disabled value="">Choose...</option>
+                                          <option value="Belum Menikah">Belum Menikah</option>
+                                          <option value="Sudah Menikah">Menikah</option>
+                                          <option value="Cerai">Cerai</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                          Please select a valid state.
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="validationCustom05" class="form-label">Profesi</label>
+                                        <input type="text" class="form-control" name="profesi" value="{{dt.profesi}}" required>
+                                        <div class="invalid-feedback">
+                                          Please provide a valid zip.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">Alamat:</label>
+                                        <textarea class="form-control" name="alamat" value="{{dt.alamat}}" style="height:220px;" required >{{dt.alamat}}</textarea>
+                                      </div>
+                                      <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </form>
+                                  </div>
+                                  </div>
+                              </div>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+        </div>
+  </main>
+
+{% block tail %}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#tambahDaftar').onsubmit = async (e) => {
+        e.preventDefault();
+        const request = new XMLHttpRequest();
+        request.onload = () => {
+            const data = JSON.parse(request.responseText);
+            if(data.success) {
+              alert('Data berhasil di input');
+            } else {
+              alert('Ada trouble');
+            }
+        }
+        const form = document.querySelector('#tambahDaftar')
+        const data = new FormData(form);
+        await request.open('POST', '/tambah_daftar', true);
+        request.send(data);
+        location.reload();
+      }
+    })
+  </script>
+{% endblock %}
+
+{% endblock %}
